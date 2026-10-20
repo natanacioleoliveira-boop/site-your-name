@@ -295,30 +295,60 @@ body {
 
     /* ESTADO ANTES DA ANIMAÇÃO */
 
-    opacity: 0;
+    opacity: var(--historia-opacity, 0);
 
     transform:
-        translateY(25px)
-        scale(0.94);
+    translateY(var(--historia-y, 25px))
+    scale(var(--historia-scale, 0.94));
 
-    filter: blur(3px);
+    filter: blur(var(--historia-blur, 3px));
 
-    transition:
-        opacity 1s ease,
-        transform 1s cubic-bezier(0.16, 1, 0.3, 1),
-        filter 1s ease;
+   will-change: transform, opacity, filter;
 }
 
 
 
-.historia-faixa.entrar {
-    opacity: 1;
+.historia-faixa {
+    width: 100%;
+    min-height: 560px;
+
+    margin: 8px 0 90px;
+
+    position: relative;
+
+    display: grid;
+    grid-template-columns: 1fr 1.6fr 1fr;
+
+    align-items: center;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            100deg,
+            #07183c 0%,
+            #402b63 50%,
+            #091b45 100%
+        );
+
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.30);
+
+
+    /* EFEITO CONTROLADO PELO SCROLL */
+
+    opacity: var(--historia-opacity, 0);
 
     transform:
-        translateY(0)
-        scale(1);
+        translateY(var(--historia-y, 25px))
+        scale(var(--historia-scale, 0.94));
 
-    filter: blur(0);
+    filter: blur(var(--historia-blur, 3px));
+
+    will-change: transform, opacity, filter;
 }
 
 /* =========================
@@ -551,6 +581,8 @@ body {
     position: relative;
     z-index: 2;
 }
+
+
 
 
 

@@ -69,25 +69,154 @@ window.addEventListener("scroll", function () {
 
 const blocoHistoria = document.querySelector(".historia-faixa");
 
-const observadorHistoria = new IntersectionObserver(
-    function (entradas) {
 
-        entradas.forEach(function (entrada) {
+function limitar(valor, minimo, maximo) {
 
-            if (entrada.isIntersecting) {
+    return Math.min(
+        Math.max(valor, minimo),
+        maximo
+    );
 
-                entrada.target.classList.add("entrar");
+}
 
-                observadorHistoria.unobserve(entrada.target);
 
-            }
+function animarHistoriaScroll() {
 
-        });
+    const posicao = blocoHistoria.getBoundingClientRect();
 
-    },
-    {
-        threshold: 0.18
-    }
+    const alturaTela = window.innerHeight;
+
+
+    /*
+        ENTRADA
+
+        0 = seção acabou de aparecer
+        1 = seção já entrou bastante na tela
+    */
+
+    const entrada = limitar(
+
+        (alturaTela - posicao.top)
+        /
+        (alturaTela * 0.55),
+
+        0,
+        1
+    );
+
+
+    /*
+        SAÍDA
+
+        Enquanto a seção estiver no centro
+        continua em 1.
+
+        Quando começa a sair pelo topo,
+        vai diminuindo.
+    */
+
+    const saida = limitar(
+
+        posicao.bottom
+        /
+        (alturaTela * 0.45),
+
+        0,
+        1
+    );
+
+
+    /*
+        USA O MENOR DOS DOIS VALORES.
+
+        Assim funciona tanto entrando
+        quanto saindo da tela.
+    */
+
+    const progresso = Math.min(
+        entrada,
+        saida
+    );
+
+
+    /*
+        OPACIDADE
+    */
+
+    const opacidade = progresso;
+
+
+    /*
+        ESCALA
+
+        começa em 0.94
+        termina em 1
+    */
+
+    const escala =
+        0.94 +
+        (progresso * 0.06);
+
+
+    /*
+        MOVIMENTO VERTICAL
+
+        começa 25px abaixo
+        termina na posição normal
+    */
+
+    const movimentoY =
+        25 *
+        (1 - progresso);
+
+
+    /*
+        DESFOQUE
+
+        começa em 3px
+        termina em 0
+    */
+
+    const desfoque =
+        3 *
+        (1 - progresso);
+
+
+    blocoHistoria.style.setProperty(
+        "--historia-opacity",
+        opacidade
+    );
+
+
+    blocoHistoria.style.setProperty(
+        "--historia-scale",
+        escala
+    );
+
+
+    blocoHistoria.style.setProperty(
+        "--historia-y",
+        movimentoY + "px"
+    );
+
+
+    blocoHistoria.style.setProperty(
+        "--historia-blur",
+        desfoque + "px"
+    );
+
+}
+
+window.addEventListener(
+    "scroll",
+    animarHistoriaScroll
 );
 
-observadorHistoria.observe(blocoHistoria);
+
+window.addEventListener(
+    "resize",
+    animarHistoriaScroll
+);
+
+
+animarHistoriaScroll();
